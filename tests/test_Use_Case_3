@@ -1,0 +1,55 @@
+import pytest
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+
+@pytest.fixture(scope="module")
+def driver():
+    service = Service(ChromeDriverManager().install())
+    options = webdriver.ChromeOptions()
+    options.add_argument("--start-maximized")
+    driver = webdriver.Chrome(service=service, options=options)
+    yield driver
+    driver.quit()
+
+def test_use_case_3(driver):
+    wait = WebDriverWait(driver, 10)
+    
+    # Step 1: Navigate to URL
+    driver.get("https://community.cloud.automationanywhere.digital/#/login")
+    
+    # Step 2: Enter username
+    username_field = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@name='username']")))
+    username_field.send_keys("your_username")
+    
+    # Step 3: Enter password
+    password_field = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@name='password']")))
+    password_field.send_keys("your_password")
+    
+    # Step 4: Click on 'AI' tab
+    ai_tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='AI']")))
+    ai_tab.click()
+    
+    # Step 5: Click on 'Document Automation'
+    document_automation = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@aria-label='Document Automation']")))
+    document_automation.click()
+    
+    # Step 6: Click on 'Create learning Instance'
+    create_learning_instance = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@title='Create Learning Instance']")))
+    create_learning_instance.click()
+    
+    # Step 8: Enter 'MyLearning' in Name textbox
+    name_textbox = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@aria-label='Name']")))
+    name_textbox.send_keys("MyLearning")
+    
+    # Step 9: Click on 'Next'
+    next_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@title='Next']")))
+    next_button.click()
+    
+    # Step 10: Click on 'Create'
+    create_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Create']")))
+    create_button.click()
